@@ -8,6 +8,7 @@ use App\Thread;
 use App\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use App\Inspections\Spam;
 
 class ThreadController extends Controller
 {
@@ -52,7 +53,7 @@ class ThreadController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, Spam $spam)
     {
         $this->validate($request, [
             'title' => 'required',
@@ -60,7 +61,10 @@ class ThreadController extends Controller
             'channel_id' =>'required|exists:channels,id'
         ]);
 
-       $thread =  Thread::create([
+        $spam->detect(request('body'));
+        $spam->detect(request('title'));
+
+        $thread =  Thread::create([
             'user_id' => auth()->id(),
             'channel_id' => request('channel_id'),
             'title' => request('title'),
