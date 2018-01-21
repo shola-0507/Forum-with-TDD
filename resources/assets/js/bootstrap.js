@@ -64,7 +64,7 @@ window.events = new Vue();
 
 Vue.config.productionTip = false;
 
-window.flash = function (message) {
+window.flash = function (message, level='success') {
 	
-	window.events.$emit('flash', message);
+	window.events.$emit('flash', {message, level});
 }

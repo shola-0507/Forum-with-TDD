@@ -37,7 +37,8 @@
 	import Favourite from './Favourite.vue';
 	import moment from 'moment';
 
-	export default{
+	export default {
+
 		props : ['data'],
 
 		components : { Favourite },
@@ -67,9 +68,19 @@
 		},
 
 		methods: {
+			
 			update() {
-				axios.patch('/replies/' + this.data.id, {
+
+				axios.patch(
+
+					'/replies/' + this.data.id, {
 					body : this.body
+
+				})
+
+				.catch(error => {
+
+					flash(error.response.data, 'danger');
 				});
 
 				this.editing = false;
