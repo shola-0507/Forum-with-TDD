@@ -16,4 +16,12 @@ class ReplyTest extends TestCase
 
     	$this->assertInstanceOf('App\User', $reply->owner);
     }
+
+    /** @test */
+    public function it_knows_if_the_reply_was_just_published() {
+
+    	$reply = factory('App\Reply')->create();
+
+    	$this->assertTrue($reply->wasJustPublished());
+    }
 }

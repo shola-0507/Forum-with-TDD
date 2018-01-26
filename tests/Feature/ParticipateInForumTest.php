@@ -118,14 +118,25 @@ class ParticipateInForum extends TestCase
 
         $this->signIn();
 
+        $thread = create('App\Thread');
         $reply = make('App\Reply', ['body' => 'Yahoo Customer Support']);
 
-        $spam = new Spam(); 
+        $this->post($thread->path() . '/replies', $reply->toArray())
+                ->assertStatus(422);
+    }
 
-        $this->expectException('Exception');
+    /** @test*/
+    public function a_user_may_only_reply_once_per_minute() {
 
-        $spam->detect($reply->body);
+        $this->signIn();
 
-        $this->post($thread->path() . '/replies', $reply->toArray());
+        $thread = create('App\Thread');
+        $reply = make('App\Reply', ['body' => 'An innocent reply']);
+
+        $this->post($thread->path() . '/replies', $reply->toArray())
+                ->assertStatus(200);
+
+        $this->post($thread->path() . '/replies', $reply->toArray())
+                ->assertStatus(422);
     }
 }

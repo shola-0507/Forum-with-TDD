@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Reply;
 use App\Thread;
 use Exception;
+use Gate;
 
 class ReplyController extends Controller
 {
@@ -22,8 +23,13 @@ class ReplyController extends Controller
 
     public function store($channelId, Thread $thread){
 
+        if (Gate::denies('create', new Reply)) {
+                
+            return response('Please wait a while before posting another reply', 422);
+        }
+        
         try{
-            $this->validateReply();
+            
             $this->validate(request(), ['body' => 'required|SpamFree']);
 
             $reply = $thread->addReply([
@@ -46,8 +52,6 @@ class ReplyController extends Controller
         $this->validate(request(), ['body' => 'required|SpamFree']);
 
         try {
-
-            $this->validateReply();
         
             $reply->update(request(['body']));
         } catch(\Exception $e) {
