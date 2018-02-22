@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Forms\CreatePostForm;
 use App\Reply;
 use App\Thread;
 use Exception;
@@ -21,29 +22,13 @@ class ReplyController extends Controller
         return $thread->replies()->paginate(20);
     }
 
-    public function store($channelId, Thread $thread){
+    public function store($channelId, Thread $thread, CreatePostForm $form){
 
-        if (Gate::denies('create', new Reply)) {
-                
-            return response('Please wait a while before posting another reply', 422);
-        }
-        
-        try{
-            
-            $this->validate(request(), ['body' => 'required|SpamFree']);
+        $reply = $thread->addReply([
+            'body' => request('body'),
+            'user_id' => auth()->id()
+        ])->load('owner');
 
-            $reply = $thread->addReply([
-                'body' => request('body'),
-                'user_id' => auth()->id()
-            ]);
-
-        } catch(\Exception $e) {
-
-            return response('Sorry we are not able to post your reply at this time', 422);
-        }
-        
-        return $reply->load('owner');
-        
     }
 
     public function update(Reply $reply) {
