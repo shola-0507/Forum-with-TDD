@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Forms\CreatePostForm;
-use App\Notifications\YouWereMentioned;
 use App\Reply;
 use App\Thread;
 use App\User;
@@ -29,22 +28,7 @@ class ReplyController extends Controller
         $reply = $thread->addReply([
             'body' => request('body'),
             'user_id' => auth()->id()
-        ]);
-
-        preg_match_all('/\@([^\s\.]+)/', $reply->body, $matches);
-
-        $names = $matches[1];
-
-        foreach ($names as $name) {
-            $user = User::whereName($name)->first();
-
-            if ($user) {
-                
-                $user->notify(new YouWereMentioned($reply));
-            }
-        }
-
-        return $reply->load('owner');
+        ])->load('owner');
 
     }
 
