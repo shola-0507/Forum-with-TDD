@@ -35,13 +35,11 @@ class ReplyController extends Controller
     public function update(Reply $reply) {
 
         $this->authorize('update', $reply);
-        $this->validate(request(), ['body' => 'required|SpamFree']);
 
-        try {
-            $reply->update(request(['body']));
-        } catch(\Exception $e) {
-            return response('Sorry we are not able to post your reply at this time', 422);
-        }
+        $this->validate(request(), ['body' => 'required|SpamFree']);
+        
+        $reply->update(request(['body']));
+
     }
 
     public function destroy(Reply $reply) {
