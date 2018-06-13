@@ -15,6 +15,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        if ($this->app->environment() == 'production') {
+            URL::forceSchema('https');
+        }
+
         schema::defaultStringLength(191);
 
         \View::composer('*', function ($view) {
@@ -25,10 +29,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         \Validator::extend('SpamFree', 'App\Rules\SpamFree@passes');
-
-        if ($this->app->environment() == 'production') {
-            URL::forceScheme('https');
-        }
+        
     }
 
     /**
