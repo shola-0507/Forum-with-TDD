@@ -4,6 +4,7 @@ namespace App\Providers;
 use Illuminate\Support\Facades\Schema;
 use App\Channel;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\URL;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,6 +25,10 @@ class AppServiceProvider extends ServiceProvider
         });
 
         \Validator::extend('SpamFree', 'App\Rules\SpamFree@passes');
+
+        if ($this->app->environment() == 'production') {
+            URL::forceScheme('https');
+        }
     }
 
     /**
