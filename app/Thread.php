@@ -24,7 +24,7 @@ class Thread extends Model
 
         static::addGlobalScope('creator', function ($builder) {
 
-            $builder->withCount('creator');
+            $builder->with('creator');
         });
 
         static::deleting(function ($thread) {
@@ -52,7 +52,7 @@ class Thread extends Model
         return $this->belongsTo(Channel::class);
     }
 
-    public function addReply($reply){
+    public function addReply($reply) {
 
     	$reply = $this->replies()->create($reply);
 
@@ -99,7 +99,7 @@ class Thread extends Model
 
     public function hasUpdatesFor($user) {
 
-       $key = $user->VisitedThreadCacheKey($this);
+        $key = $user->VisitedThreadCacheKey($this);
 
         return $this->updated_at > cache($key);
     }

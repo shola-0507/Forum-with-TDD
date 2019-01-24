@@ -4,7 +4,7 @@ namespace App\Filters;
 
 use App\User; 
 
-class ThreadFilters extends Filters{
+class ThreadFilters extends Filters {
 
 	protected $filters = ['by', 'popular', 'unanswered'];
 

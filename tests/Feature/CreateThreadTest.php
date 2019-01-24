@@ -98,7 +98,6 @@ class CreateThreadTest extends TestCase
 
     }
 
-    /** @test */
     public function publishThread($assertions = []){
 
         $this->withExceptionHandling()->signIn();

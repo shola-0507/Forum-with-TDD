@@ -20,14 +20,10 @@
         created() {
 
             if (this.message) {
-
                 this.flash(this.message);
             }
 
-            window.events.$on('flash', data => 
-
-                this.flash(data)
-            );
+            window.events.$on('flash', data => this.flash(data));
         },
 
         methods: {

@@ -8,15 +8,15 @@ export default{
 
 	methods: {
 		add(Item) {
-				this.items.push(Item);
+			this.items.push(Item);
 
-				this.$emit('added');
-			},
+			this.$emit('added');
+		},
 
-			remove(index) {
-				this.items.splice(index, 1);
+		remove(index) {
+			this.items.splice(index, 1);
 
-				this.$emit('removed');
-			}
+			this.$emit('removed');
+		}
 	}
 }

@@ -13,7 +13,7 @@ use Gate;
 class ReplyController extends Controller
 {
 
-	public function __construct(){
+	public function __construct() {
 
 		$this->middleware('auth', ['except' => 'index']);
 	}
@@ -25,7 +25,7 @@ class ReplyController extends Controller
 
     public function store($channelId, Thread $thread, CreatePostForm $form) {
 
-        $reply = $thread->addReply([
+        return $thread->addReply([
             'body' => request('body'),
             'user_id' => auth()->id()
         ])->load('owner');

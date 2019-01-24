@@ -133,7 +133,7 @@ class ThreadController extends Controller
         
     }
 
-    protected function getThreads(Channel $channel, ThreadFilters $filters){
+    protected function getThreads(Channel $channel, ThreadFilters $filters) {
 
         $threads = Thread::latest()->filter($filters);
 

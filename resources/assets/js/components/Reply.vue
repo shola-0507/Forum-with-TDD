@@ -73,21 +73,13 @@
 			
 			update() {
 
-				axios.patch(
+				axios.patch('/replies/' + this.data.id, { body : this.body })
 
-					'/replies/' + this.data.id, {
-					body : this.body
-
-				})
-
-				.catch(error => {
-
-					flash(error.response.data, 'danger');
-				});
+				.catch(error => { flash(error.response.data, 'danger') });
 
 				this.editing = false;
 
-				flash('Updated!');
+				flash('Reply Updated!');
 			},
 
 			destroy() {

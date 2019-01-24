@@ -2,16 +2,16 @@
 	<div>
 		<div v-if="signedIn">
 			<div class="form-group">
-            <textarea name="body" 
-            		  id="reply" 
-            		  class="form-control" 
-            		  placeholder="Wanna add something?"
-            		  v-model="body" 
-            		  rows="5">
-            </textarea>
-        </div>
+	            <textarea name="body" 
+	            		  id="body" 
+	            		  class="form-control" 
+	            		  placeholder="Wanna add something?"
+	            		  v-model="body" 
+	            		  rows="5">
+	            </textarea>
+	        </div>
 
-        <button type="submit"
+	        <button type="submit"
         		@click="addReply" 
         		class="btn btn-default">Post</button>
 		</div>
@@ -22,13 +22,14 @@
 
 <script>
 	
-	import 'jquery-caret';
+	import 'jquery.caret';
 	import 'at.js';
 	export default {
 
 		data() {
 			return {
 				body: '',
+				endpoint: location.pathname + '/replies',
 			}
 		},
 
@@ -41,26 +42,25 @@
 
 		mounted() {
 
-			// $('#reply').atwho({
-			// 	at: "@",
-			// 	delay: 750,
-			// 	callbacks: {
+			$('#body').atwho({
+				at: "@",
+				delay: 750,
+				callbacks: {
 
-			// 		remoteFilter: function(query, callback) {
-			// 			console.log('called');
-			// 		}
+					remoteFilter: function(query, callback) {
 
-			// 		// $.getJSON("/users.php", {q = query}, function($usernames) {
-			// 		// 	callback(usernames)
-			// 		// });
-			// 	}
-			// });
+						$.getJSON("/api/users", {name: query}, function(name) {
+							callback(name)
+						});
+					}
+				}
+			});
 		},
 
 		methods: {
 
 			addReply() {
-				axios.post(location.pathname + '/replies', { body: this.body })
+				axios.post(this.endpoint, { body: this.body })
 
 				.catch(error => {
 

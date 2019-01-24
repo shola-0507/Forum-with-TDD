@@ -1,9 +1,9 @@
-<?php
+<?php  
 
 namespace App\Filters;
 use Illuminate\Http\Request;
 
-class Filters {
+abstract class Filters {
 
 	protected $request, $builder;
 	protected $filters = [];
@@ -30,7 +30,6 @@ class Filters {
 
 	public function getFilters() {
 
-		return $this->request->intersect($this->filters);
+		return $this->request->only($this->filters);
 	}
-
 }

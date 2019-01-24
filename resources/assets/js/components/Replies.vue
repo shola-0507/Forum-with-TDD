@@ -4,7 +4,7 @@
 			<reply :data="reply" @deleted="remove(index)" :key="reply.id"></reply>
 		</div>
 
-		<paginator :dataSet="dataSet" @updated="fetch"></paginator>
+		<paginator :dataSet="dataSet" @changed="fetch"></paginator>
 		<NewReply @created="add"></NewReply>
 	</div>
 </template>
@@ -21,7 +21,7 @@
 		mixins: [collection],
 
 		data() {
-			return{
+			return {
 				dataSet: false,
 			}
 		},
