@@ -5,13 +5,14 @@ namespace Tests\Unit;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use App\Notifications\ThreadWasUpdated;
+use Illuminate\Support\Facades\Notification;
 
 class ThreadTest extends TestCase
 {
     use DatabaseMigrations;
     protected $thread;
 
-    public function setUp(){
+    public function setUp() {
 
         parent::setUp();
 
@@ -127,5 +128,23 @@ class ThreadTest extends TestCase
 
             $this->assertFalse($thread->hasUpdatesFor($user));
         });
+    }
+
+    /** @test */
+    public function a_thread_can_record_visits() {
+
+        $thread = make('App\Thread', ['id' => 1]);
+
+        $thread->resetVisits();
+
+        $this->assertSame(0, $thread->visits());
+
+        $thread->recordVisit();
+
+        $this->assertEquals(1, $thread->visits());
+
+        $thread->recordVisit();
+
+        $this->assertEquals(2, $thread->visits());
     }
 }

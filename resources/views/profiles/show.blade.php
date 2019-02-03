@@ -6,9 +6,7 @@
 		<div class="row">
 			<div class="col-md-8 col-md-offset-2">
 				<div class="page-header">
-					<h2>
-						{{ $ProfileUser->name }}
-					</h2>
+					<avatar-form :user="{{ $ProfileUser }}"></avatar-form>
 				</div>
 
 				@forelse($activities as $date => $activity)

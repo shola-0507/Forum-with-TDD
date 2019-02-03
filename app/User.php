@@ -15,7 +15,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password', 'avatar_path'
     ];
 
     /**
@@ -50,6 +50,11 @@ class User extends Authenticatable
     public function VisitedThreadCacheKey($thread) {
 
         return $key = sprintf("users.%s.visits.%s", $this->id, $thread->id);
+    }
+
+    public function getAvatarPathAttribute($avatar) {
+
+        return $avatar ? '/storage/' . $avatar : '/images/avatars/default.jpg';
     }
 
     public function read($thread) {
