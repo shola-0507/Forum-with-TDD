@@ -20,7 +20,7 @@ class CreateThreadTest extends TestCase
         $this->get('/threads/create')
               ->assertRedirect('/login');
               
-        $this->post('/threads')
+        $this->post(route('threads'))
               ->assertRedirect('/login');
     } 
 
@@ -34,13 +34,27 @@ class CreateThreadTest extends TestCase
         $thread  = make('App\Thread');
 
         //Persist the thread in the database
-        $response = $this->post('/threads', $thread->toArray());
+        $response = $this->post(route('threads'), $thread->toArray());
 
         //Go to the thread URL and check if the thread title and body can be found on the page
         $this->get($response->headers->get('location'))
              ->assertSee($thread->title)
         	 ->assertSee($thread->body);
 
+    }
+
+    /** @test */
+    public function a_new_user_must_confirm_their_email_before_creating_threads() {
+
+        $user = factory('App\User')->states('unconfirmed')->create();
+
+        $this->withExceptionHandling()->signIn($user);
+
+        $thread = make('App\Thread');
+
+        return $this->post(route('threads'), $thread->toArray())
+                ->assertRedirect('/threads')
+                ->assertSessionHas('flash', 'You must confirm your email address');
     }
 
     /** @test */
@@ -98,13 +112,13 @@ class CreateThreadTest extends TestCase
 
     }
 
-    public function publishThread($assertions = []){
+    public function publishThread($assertions = []) {
 
         $this->withExceptionHandling()->signIn();
 
         $thread = make('App\Thread', $assertions);
 
-        return $this->post('/threads', $thread->toArray());
+        return $this->post(route('threads'), $thread->toArray());
 
     }
 }
