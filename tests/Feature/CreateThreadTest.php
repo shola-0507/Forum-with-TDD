@@ -3,10 +3,11 @@
 namespace Tests\Feature;
 
 use App\Activity;
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithoutMiddleware;
+use App\Thread;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\WithoutMiddleware;
+use Tests\TestCase;
 
 class CreateThreadTest extends TestCase
 {
@@ -110,6 +111,24 @@ class CreateThreadTest extends TestCase
         $this->assertDatabaseMissing('replies', ['id' => $reply->id]);
         $this->assertEquals(0, Activity::count());
 
+    }
+
+    /** @test */
+    public function a_thread_should_have_a_unique_slug() {
+
+        $this->signIn();
+
+        $thread = create('App\Thread', ['title' => 'foo title', 'slug' => 'foo-title']);
+
+        $this->assertEquals($thread->fresh()->slug, 'foo-title');
+
+        $this->post('/threads', $thread->toArray());
+
+        $this->assertTrue(Thread::whereSlug('foo-title-2')->exists());
+
+        $this->post('/threads', $thread->toArray());
+
+        $this->assertTrue(Thread::whereSlug('foo-title-3')->exists());
     }
 
     public function publishThread($assertions = []) {

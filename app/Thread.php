@@ -32,22 +32,22 @@ class Thread extends Model
         });
     }
 
-    public function path(){
+    public function path() {
 
-    	return "/threads/{$this->channel->slug}/{$this->id}";
+    	return "/threads/{$this->channel->slug}/{$this->slug}";
     }
 
-    public function replies(){
+    public function replies() {
 
     	return $this->hasMany(Reply::class);
     }
 
-    public function creator(){
+    public function creator() {
 
     	return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function channel(){
+    public function channel() {
         
         return $this->belongsTo(Channel::class);
     }
@@ -102,5 +102,30 @@ class Thread extends Model
         $key = $user->VisitedThreadCacheKey($this);
 
         return $this->updated_at > cache($key);
+    }
+
+    public function getRouteKeyName() {
+        return 'slug'; 
+    }
+
+    public function setSlugAttribute($value) {
+
+        if (static::whereSlug($slug = str_slug($value))->exists()) {
+            $slug = $this->incrementSlug($slug);
+        }
+
+        $this->attributes['slug'] = $slug;
+    }
+
+    private function incrementSlug($slug) {
+        $max = static::whereTitle($this->title)->latest('id')->value('slug');
+
+        if (is_numeric($max[-1])) {
+            return preg_replace_callback('/(\d+)$/', function ($matches) {
+                return $matches[1] + 1;
+            }, $max);
+        }
+
+        return "{$slug}-2";
     }
 }
