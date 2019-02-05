@@ -9,15 +9,14 @@ use Illuminate\Http\Request;
 class UserConfirmationController extends Controller
 {
     public function index() {
-    	try{
-    		User::where('confirmation_token', request('token'))
-    		->firstOrFail()
-    		->confirm();
-    	} catch(\Exception $e) {
-    		return redirect('/threads')
-    		->with('flash', 'Invalid Token');
-    	}
+		$user = User::where('confirmation_token', request('token'))->first();
+		
+		if (! $user) {
+			return redirect('/threads')->with('flash', 'Invalid Token');
+		}
 
+		$user->confirm();
+	
     	return redirect('/threads')->with('flash', 'Your account has been confirmed, You can now post to the forum');
     }
 }
