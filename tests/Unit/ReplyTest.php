@@ -2,9 +2,10 @@
 
 namespace Tests\Unit;
 
-use Tests\TestCase;
+use App\Reply;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Tests\TestCase;
 
 class ReplyTest extends TestCase
 {
@@ -40,7 +41,7 @@ class ReplyTest extends TestCase
     /** @test */
     function it_replaces_usernames_within_replies_within_anchortags() {
 
-        $reply = new \App\Reply([
+        $reply = new Reply([
             'body' => 'Hello @Jane-Doe.'
         ]);
 
@@ -48,5 +49,17 @@ class ReplyTest extends TestCase
             'Hello <a href="/profiles/Jane-Doe">@Jane-Doe</a>.', 
             $reply->body
         );
+    }
+
+    /** @test */
+    public function it_knows_if_it_is_the_best_reply() {
+
+        $reply = create('App\Reply');
+
+        $this->assertFalse($reply->isBest());
+
+        $reply->thread->update(['best_reply_id' => $reply->id]);
+
+        $this->assertTrue($reply->fresh()->isBest());        
     }
 }
