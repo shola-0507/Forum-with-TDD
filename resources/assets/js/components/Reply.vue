@@ -7,7 +7,7 @@
 			     	</a> said <span v-text="ago"></span>
 	     		</h5>
 	     		
-		     	<div v-if="authorize('updateReply', reply)"> 
+		     	<div v-if="signedIn"> 
 		     		<favourite :reply="data"></favourite> 
 		     	</div>
 			   
@@ -29,7 +29,7 @@
 	    </div>
 	 	
 		    <div class="panel-footer level">
-		    	<div v-if="canUpdate">
+		    	<div v-if="authorize('updateReply', reply)">
 		    		<button class="btn btn-xs mr-1" type="submit" @click="editing = true">Edit</button>
 		    		<button class="btn btn-xs btn-danger mr-1" type="submit" @click="destroy">Delete</button>
 		    	</div>
@@ -54,7 +54,7 @@
 				editing : false,
 				body : this.data.body,
 				id: this.data.id,
-				isBest: false,
+				isBest: this.data.isBest,
 				reply: this.data
 			};
 		},
@@ -64,6 +64,12 @@
 			ago() {
 				return moment(this.data.created_at).fromNow();
 			}
+		},
+
+		created() {
+			window.events.$on('best-reply-selected', id => {
+				this.isBest = (id === this.id);
+			})
 		},
 
 		methods: {
@@ -85,7 +91,9 @@
 			},
 
 			markBestReply() {
-				this.isBest = true;
+				axios.post('/replies/' + this.data.id + '/best');
+
+				window.events.$emit('best-reply-selected', this.data.id);
 			}
 		}
 	}

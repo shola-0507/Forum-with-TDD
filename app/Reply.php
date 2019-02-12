@@ -14,7 +14,7 @@ class Reply extends Model
 
     protected $with = ['owner', 'favourites'];
 
-    protected $appends = ['favouritesCount', 'isFavourited'];
+    protected $appends = ['favouritesCount', 'isFavourited', 'isBest'];
 
     protected static function boot() {
 
@@ -56,5 +56,9 @@ class Reply extends Model
 
     public function wasJustPublished() {
         return $this->created_at->gt(Carbon::now()->subMinute());
+    }
+
+    public function getisBestAttribute() {
+        return $this->isBest();
     }
 }

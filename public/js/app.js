@@ -61184,7 +61184,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			editing: false,
 			body: this.data.body,
 			id: this.data.id,
-			isBest: false,
+			isBest: this.data.isBest,
 			reply: this.data
 		};
 	},
@@ -61195,6 +61195,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			return __WEBPACK_IMPORTED_MODULE_1_moment___default()(this.data.created_at).fromNow();
 		}
 	},
+
+	created: function created() {
+		var _this = this;
+
+		window.events.$on('best-reply-selected', function (id) {
+			_this.isBest = id === _this.id;
+		});
+	},
+
 
 	methods: {
 		update: function update() {
@@ -61212,7 +61221,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 			this.$emit('deleted', this.data.id);
 		},
 		markBestReply: function markBestReply() {
-			this.isBest = true;
+			axios.post('/replies/' + this.data.id + '/best');
+
+			window.events.$emit('best-reply-selected', this.data.id);
 		}
 	}
 });
@@ -61652,7 +61663,7 @@ var render = function() {
             _c("span", { domProps: { textContent: _vm._s(_vm.ago) } })
           ]),
           _vm._v(" "),
-          _vm.authorize("updateReply", _vm.reply)
+          _vm.signedIn
             ? _c("div", [_c("favourite", { attrs: { reply: _vm.data } })], 1)
             : _vm._e()
         ])
@@ -61709,7 +61720,7 @@ var render = function() {
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "panel-footer level" }, [
-        _vm.canUpdate
+        _vm.authorize("updateReply", _vm.reply)
           ? _c("div", [
               _c(
                 "button",
