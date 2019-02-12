@@ -7,7 +7,7 @@
 			     	</a> said <span v-text="ago"></span>
 	     		</h5>
 	     		
-		     	<div v-if="signedIn"> 
+		     	<div v-if="authorize('updateReply', reply)"> 
 		     		<favourite :reply="data"></favourite> 
 		     	</div>
 			   
@@ -55,6 +55,7 @@
 				body : this.data.body,
 				id: this.data.id,
 				isBest: false,
+				reply: this.data
 			};
 		},
 
@@ -62,16 +63,7 @@
 
 			ago() {
 				return moment(this.data.created_at).fromNow();
-			},
-
-			signedIn() {
-				return window.App.signedIn;
-			},
-
-			canUpdate() {
-				return this.authorize(user => this.data.user_id == user.id);
-				//return this.data.user_id == window.App.user.id;
-			} 
+			}
 		},
 
 		methods: {
