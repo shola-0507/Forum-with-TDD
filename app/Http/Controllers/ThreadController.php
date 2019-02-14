@@ -116,9 +116,12 @@ class ThreadController extends Controller
      * @param  \App\Thread  $thread
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Thread $thread)
+    public function update($channel, Thread $thread)
     {
-        //
+        if (request()->has('locked')) {
+            
+            $thread->locked();
+        }
     }
 
     /**
@@ -130,9 +133,6 @@ class ThreadController extends Controller
     public function destroy($channel, Thread $thread)
     {
         $this->authorize('update', $thread);
-
-        /*This has been implemented in the thread boot static method.
-        $thread->replies()->delete();*/
 
         $thread->delete();
 

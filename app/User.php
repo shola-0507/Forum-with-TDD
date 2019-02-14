@@ -40,6 +40,10 @@ class User extends Authenticatable
         $this->save();
     }
 
+    public function isAdmin() {
+        return in_array($this->name, ['Olushola', 'Test']);
+    }
+
     public function threads() {
 
         return $this->hasMany(Thread::class)->latest();
